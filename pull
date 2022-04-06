@@ -1,11 +1,5 @@
 #!/usr/local/bin/bash -e
 
-# For use with depot.
-# Eventually this should be `depot pull DIR`
-
-# which rsync
-# rsync --version
-
 usage()
 {
     echo "Usage: $0 [-f] PATH [PATH ...]"

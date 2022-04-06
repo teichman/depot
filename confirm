@@ -1,0 +1,36 @@
+#!/bin/bash
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: $0 DEPOT_SERVER ~/depot/PATH/TO/DIR"
+    echo "  Confirms that ~/depot/PATH/TO/DIR is exactly mirrored on ~/depot and DEPOT_SERVER:~/depot."
+    exit
+fi
+
+DEPOT_SERVER=$1
+TARGET=$(realpath $2)
+
+
+NUM_LOCAL_FILES=$(find $TARGET -type f | wc -l)
+NUM_REMOTE_FILES=$(ssh $DEPOT_SERVER find $TARGET -type f | wc -l)
+
+echo
+echo "Num local files:  $NUM_LOCAL_FILES"
+echo "Num remote files: $NUM_REMOTE_FILES"
+echo
+
+if [[ $NUM_LOCAL_FILES -ne $NUM_REMOTE_FILES ]]; then
+    echo "$TARGET does not match."
+    exit
+fi
+
+LOCAL_MD5=$(find $TARGET -type f -exec md5 {} + | awk '{print $NF}' | sort | md5)
+echo "MD5 of MD5 of local files:  $LOCAL_MD5"
+REMOTE_MD5=$(ssh $DEPOT_SERVER find $TARGET -type f -exec md5 {} + | awk '{print $NF}' | sort | md5)
+echo "MD5 of MD5 of remote files: $REMOTE_MD5"
+echo
+if [[ "$LOCAL_MD5" == "$REMOTE_MD5" ]]; then
+    echo "$TARGET is confirmed identical."
+else
+    echo "$TARGET does not match."
+fi
+echo

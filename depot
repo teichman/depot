@@ -2,13 +2,36 @@
 
 if [[ $# -eq 0 ]]; then
     echo "Usage: $0 CMD"
-    echo "  where CMD is push, pull, or rm"
+    echo "  where CMD is push, pull, confirm, or rm"
     exit
 fi
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
+DEPOT_SERVER=""
+
+SSID=""
+if [ `uname -s` == 'Darwin' ]; then
+    SSID=$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I | grep ' SSID' | awk -F': ' '{print $2}')
+else
+    echo SSID detection on linux machines not handled yet.
+    exit
+fi
+
+ping -c1 -t1 cobalt.local &> /dev/null
+if [ $? -eq 0 ]; then
+    DEPOT_SERVER="cobalt"
+fi
+
+if [ -z $DEPOT_SERVER ]; then
+    echo "Could not connect to a depot server."
+    exit
+fi
+
+echo "Connecting to depot server $DEPOT_SERVER"
+
+
 CMD=$1
 shift
 
-$SCRIPT_DIR/$CMD $@
+$SCRIPT_DIR/$CMD $DEPOT_SERVER $@

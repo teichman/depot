@@ -1,31 +1,12 @@
 #!/bin/bash
 
 
-if [[ $# -ne 0 ]]; then
-    echo "Usage: ./push"
+if [[ $# -eq 0 ]]; then
+    echo "Usage: ./push DEPOT_SERVER"
     exit 0
 fi
-DEPOT_SERVER=""
 
-SSID=""
-if [ `uname -s` == 'Darwin' ]; then
-    SSID=$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I | grep ' SSID' | awk -F': ' '{print $2}')
-else
-    echo SSID detection on linux machines not handled yet.
-    exit
-fi
-
-ping -c1 -t1 cobalt.local &> /dev/null
-if [ $? -eq 0 ]; then
-    DEPOT_SERVER="cobalt"
-fi
-
-if [ -z $DEPOT_SERVER ]; then
-    echo "Could not connect to a depot server."
-    exit
-fi
-
-echo "Connecting to depot server $DEPOT_SERVER"
+DEPOT_SERVER=$1
 
 # -K :: Treat a symlinked dir on the receiving end as a dir.
 # -u :: If there is a newer file on the other side, don't replace it.
