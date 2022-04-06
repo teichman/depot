@@ -1,13 +1,16 @@
-#!/usr/local/bin/bash -e
+#!/bin/bash -e
 
 usage()
 {
-    echo "Usage: $0 [-f] PATH [PATH ...]"
+    echo "Usage: $0 DEPOT_SERVER [-f] PATH [PATH ...]"
     echo "  Example PATH is 'photo/2014/2014-06-14_archery_tag_experimentation'"
     echo "  If you just want the album dir:"
     echo "    'photo/2014/2014-06-14_archery_tag_experimentation/album'"
     exit
 }
+
+DEPOT_SERVER=$1
+shift
 
 FORCE=false
 while getopts ":f" opt; do
@@ -22,14 +25,12 @@ while getopts ":f" opt; do
 done
 shift $((OPTIND-1))
 
-echo $@
-
-
 for TARGET in "$@"; do
     # This cmd (mostly?) skips the source photos
 #    CMD="rsync -av --recursive --relative --exclude=*.hdr --exclude=$TARGET/*.JPG --exclude=$TARGET/*.CR2 --exclude=$TARGET/*.jpg --exclude=*.MP4 --exclude=$TARGET/raw --progress cobalt:/Users/teichman/depot/./$TARGET /Users/teichman/depot/"
 
     CMD="rsync -av --recursive --relative --exclude=*.hdr --exclude=$TARGET/*.CR2 --exclude=*.MP4 --exclude=$TARGET/raw --progress cobalt:/Users/teichman/depot/./$TARGET /Users/teichman/depot/"
+    echo $CMD
 
     # Ah ha.  There's a big pitfall here in the use of ~.  Better to just not.
     #CMD="rsync -av --recursive --relative cobalt:/Users/teichman/depot/./$1 /Users/teichman/depot/"
