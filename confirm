@@ -9,7 +9,6 @@ fi
 DEPOT_SERVER=$1
 TARGET=$(realpath $2)
 
-
 NUM_LOCAL_FILES=$(find $TARGET -type f | wc -l)
 NUM_REMOTE_FILES=$(ssh $DEPOT_SERVER find $TARGET -type f | wc -l)
 

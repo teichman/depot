@@ -2,7 +2,7 @@
 
 if [[ $# -eq 0 ]]; then
     echo "Usage: $0 CMD"
-    echo "  where CMD is push, pull, confirm, or rm"
+    echo "  where CMD is push, pull, confirm, ls, or rm"
     exit
 fi
 
