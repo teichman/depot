@@ -19,7 +19,7 @@ echo
 
 if [[ $NUM_LOCAL_FILES -ne $NUM_REMOTE_FILES ]]; then
     echo "$TARGET does not match."
-    exit
+    exit 1
 fi
 
 LOCAL_MD5=$(find $TARGET -type f -exec md5 {} + | awk '{print $NF}' | sort | md5)
@@ -29,7 +29,9 @@ echo "MD5 of MD5 of remote files: $REMOTE_MD5"
 echo
 if [[ "$LOCAL_MD5" == "$REMOTE_MD5" ]]; then
     echo "$TARGET is confirmed identical."
+    exit 0 
 else
     echo "$TARGET does not match."
+    exit 1
 fi
-echo
+exit 2

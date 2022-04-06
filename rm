@@ -1,0 +1,23 @@
+#!/bin/bash
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: $0 DEPOT_SERVER ~/depot/PATH/TO/DIR"
+    echo "  Deletes ~/depot/PATH/TO/DIR after confirming it is exactly mirrored on DEPOT_SERVER:~/depot."
+    exit
+fi
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+DEPOT_SERVER=$1
+TARGET=$(realpath $2)
+
+echo "Confirming that $TARGET exists on depot server."
+$SCRIPT_DIR/confirm $DEPOT_SERVER $TARGET
+
+if [[ $? -eq 0 ]]; then
+    echo
+    echo "It is probably safe to run:"
+    echo "  rm -rf $TARGET"
+else
+    echo
+    echo "Something isn't right.  Don't delete locally yet."
+fi
