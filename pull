@@ -1,0 +1,61 @@
+#!/usr/local/bin/bash -e
+
+# For use with depot.
+# Eventually this should be `depot pull DIR`
+
+# which rsync
+# rsync --version
+
+usage()
+{
+    echo "Usage: $0 [-f] PATH [PATH ...]"
+    echo "  Example PATH is 'photo/2014/2014-06-14_archery_tag_experimentation'"
+    echo "  If you just want the album dir:"
+    echo "    'photo/2014/2014-06-14_archery_tag_experimentation/album'"
+    exit
+}
+
+FORCE=false
+while getopts ":f" opt; do
+    case "${opt}" in
+        f)
+            FORCE=true
+            ;;
+        *)
+            usage
+            ;;
+    esac
+done
+shift $((OPTIND-1))
+
+echo $@
+
+
+for TARGET in "$@"; do
+    # This cmd (mostly?) skips the source photos
+#    CMD="rsync -av --recursive --relative --exclude=*.hdr --exclude=$TARGET/*.JPG --exclude=$TARGET/*.CR2 --exclude=$TARGET/*.jpg --exclude=*.MP4 --exclude=$TARGET/raw --progress cobalt:/Users/teichman/depot/./$TARGET /Users/teichman/depot/"
+
+    CMD="rsync -av --recursive --relative --exclude=*.hdr --exclude=$TARGET/*.CR2 --exclude=*.MP4 --exclude=$TARGET/raw --progress cobalt:/Users/teichman/depot/./$TARGET /Users/teichman/depot/"
+
+    # Ah ha.  There's a big pitfall here in the use of ~.  Better to just not.
+    #CMD="rsync -av --recursive --relative cobalt:/Users/teichman/depot/./$1 /Users/teichman/depot/"
+
+    if [ $FORCE = false ]; then
+        $CMD -n
+        echo
+        echo "Command: $CMD"
+        echo
+        read -p "RET to continue."
+    fi
+
+    echo $CMD
+    $CMD
+done
+
+# wants to recopy
+# rsync -av --recursive --relative cobalt:~/depot/./photo/2014/2014-06-14_archery_tag_experimentation ~/depot/
+
+# doesn't
+# rsync -av --recursive --relative cobalt:~/depot/./photo/2014/2014-06-14_archery_tag_experimentation ~/depot/
+
+# uh.

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+if [[ $# -eq 0 ]]; then
+    echo "Usage: $0 CMD"
+    echo "  where CMD is push, pull, or rm"
+    exit
+fi
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+
+CMD=$1
+shift
+
+$SCRIPT_DIR/$CMD $@
