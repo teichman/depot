@@ -29,7 +29,7 @@ echo "Connecting to depot server $DEPOT_SERVER"
 
 # -K :: Treat a symlinked dir on the receiving end as a dir.
 # -u :: If there is a newer file on the other side, don't replace it.
-CMD="rsync -avK -u --size-only $HOME/depot $DEPOT_SERVER:~/depot/"
+CMD="rsync -auK -vh $HOME/depot/ $DEPOT_SERVER:~/depot/"
 
 mkdir -p ~/.depot
 # $CMD -n | grep -v '/$' | egrep -v 'building file list ... done|sent.*bytes.*received.*bytes.*bytes/sec|total size is.*speedup is|^$' > ~/.depot/to_transfer.txt
