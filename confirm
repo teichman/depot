@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ $# -eq 0 ]]; then
+if [[ $# -ne 2 ]]; then
     echo "Usage: $0 DEPOT_SERVER ~/depot/PATH/TO/DIR"
     echo "  Confirms that ~/depot/PATH/TO/DIR is exactly mirrored on ~/depot and DEPOT_SERVER:~/depot."
     exit
