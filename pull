@@ -28,13 +28,16 @@ shift $((OPTIND-1))
 for TARGET in "$@"; do
     # This cmd (mostly?) skips the source photos
 #    CMD="rsync -av --recursive --relative --exclude=*.hdr --exclude=$TARGET/*.JPG --exclude=$TARGET/*.CR2 --exclude=$TARGET/*.jpg --exclude=*.MP4 --exclude=$TARGET/raw --progress cobalt:/Users/teichman/depot/./$TARGET /Users/teichman/depot/"
-
-    CMD="rsync -av --recursive --relative --exclude=*.hdr --exclude=$TARGET/*.CR2 --exclude=*.MP4 --exclude=$TARGET/raw --progress cobalt:/Users/teichman/depot/./$TARGET /Users/teichman/depot/"
+    INTERMEDIATE_DIRS=$(echo $(pwd) | awk -F'depot/' '{print $NF}')
+    CMD="rsync -av --recursive --relative --exclude=*.hdr --exclude=$TARGET/*.CR2 --exclude=$TARGET/raw --progress cobalt:/Users/teichman/depot/./$INTERMEDIATE_DIRS/$TARGET /Users/teichman/depot/"
     echo $CMD
 
     # Ah ha.  There's a big pitfall here in the use of ~.  Better to just not.
     #CMD="rsync -av --recursive --relative cobalt:/Users/teichman/depot/./$1 /Users/teichman/depot/"
-
+    
+    
+    mkdir -p $TARGET
+    
     if [ $FORCE = false ]; then
         $CMD -n
         echo
