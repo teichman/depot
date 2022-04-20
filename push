@@ -1,16 +1,22 @@
 #!/bin/bash
 
-
 if [[ $# -eq 0 ]]; then
-    echo "Usage: ./push DEPOT_SERVER"
+    echo "Usage: ./push DEPOT_SERVER [TARGET]"
     exit 0
+fi
+
+if [[ $# -eq 2 ]]; then
+    TARGET=$(realpath $2)
+else
+    TARGET=$HOME/depot/
 fi
 
 DEPOT_SERVER=$1
 
 # -K :: Treat a symlinked dir on the receiving end as a dir.
 # -u :: If there is a newer file on the other side, don't replace it.
-CMD="rsync -auK -vh $HOME/depot/ $DEPOT_SERVER:~/depot/"
+# OLD_CMD="rsync -auK -vh $HOME/depot/ $DEPOT_SERVER:~/depot/"
+CMD="rsync -auK -vh $TARGET/ $DEPOT_SERVER:$TARGET/"
 
 mkdir -p ~/.depot
 # $CMD -n | grep -v '/$' | egrep -v 'building file list ... done|sent.*bytes.*received.*bytes.*bytes/sec|total size is.*speedup is|^$' > ~/.depot/to_transfer.txt
