@@ -16,7 +16,12 @@ if __name__ == "__main__":
 
   cmd = f"ssh {args.server} ls {args.target}"
   #cmd = f"ssh -t {args.server} ls -l {args.target}"
-  remote_contents = clio(cmd).split('\n')
+  response = clio(cmd, quiet=True)
+  if type(response) == bytes:
+    print(f"Remote server said: {response}")
+    remote_contents = []
+  else:
+    remote_contents = clio(cmd).split('\n')
   
   local_contents = []
   if os.path.exists(args.target):
