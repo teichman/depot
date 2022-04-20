@@ -23,24 +23,17 @@ if __name__ == "__main__":
     local_contents = clio(f"ls {args.target}").split('\n')
 
   contents = sorted(list(set(remote_contents + local_contents)))
-  idx_rc = 0
-  idx_lc = 0
   print()
   width = max([len(c) for c in contents]) + 5
   print(f"{'local':{width}} {args.server:{width}}")
   print('-'*(width*2+5))
-  for idx, c in enumerate(contents):
-    if idx_lc < len(local_contents) and local_contents[idx_lc] == c:
-      if idx_rc < len(remote_contents) and remote_contents[idx_rc] == c:
-        print(f"{c:{width}} {c:{width}}")
-        idx_rc += 1
-        idx_lc += 1
-    elif idx_lc < len(local_contents) and local_contents[idx_lc] == c:        
-      print(f"{c:{width}}")
-      idx_lc += 1
-    elif idx_rc < len(remote_contents) and remote_contents[idx_rc] == c:      
-      print(f"{'':{width}} {c:{width}}")
-      idx_rc += 1
-      
-    
-  
+  # O(n^2) but who cares
+  for fname in contents:
+    is_local = fname in local_contents
+    is_remote = fname in remote_contents
+    if is_local and is_remote:
+      print(f"{fname:{width}} {fname:{width}}")
+    elif is_local and not is_remote:
+      print(f"{fname:{width}}")
+    elif not is_local and is_remote:      
+      print(f"{'':{width}} {fname:{width}}")
