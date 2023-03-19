@@ -8,7 +8,8 @@ fi
 if [[ $# -eq 2 ]]; then
     TARGET=$(realpath $2)
 else
-    TARGET=$HOME/depot/
+    # TARGET=$HOME/depot/
+    TARGET=$(pwd)
 fi
 
 DEPOT_SERVER=$1
@@ -16,7 +17,9 @@ DEPOT_SERVER=$1
 # -K :: Treat a symlinked dir on the receiving end as a dir.
 # -u :: If there is a newer file on the other side, don't replace it.
 # OLD_CMD="rsync -auK -vh $HOME/depot/ $DEPOT_SERVER:~/depot/"
-CMD="rsync -auK -vh $TARGET/ $DEPOT_SERVER:$TARGET/"
+CMD="caffeinate rsync -auK -vh $TARGET/ $DEPOT_SERVER:$TARGET/"
+
+echo "Command: $CMD"
 
 mkdir -p ~/.depot
 # $CMD -n | grep -v '/$' | egrep -v 'building file list ... done|sent.*bytes.*received.*bytes.*bytes/sec|total size is.*speedup is|^$' > ~/.depot/to_transfer.txt
